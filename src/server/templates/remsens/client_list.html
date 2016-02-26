@@ -1,0 +1,28 @@
+{% extends 'remsens/base.html' %} {% load staticfiles %} {% block head %} {% endblock head %} {% block content %}
+
+<div>
+  <h3 class="page-header"><b>{{ user }}</b> sei membro dell'organizzazione <b>{{ myorg }}</b></h3>
+
+  +<a href="{% url 'add_client_org' %}">Add a Client</a>
+  <br />
+
+  <h3><a href="{% url 'client_list' %}">{{ myorg }}</a></h3>
+  <p> <b>Tutti i membri dell'organizzazione:</b> {%for user in myorg.userprofile_set.all %} {{ user }} {% endfor %}</p>
+
+      {%for client in myorg.client_set.all %}
+      <b>Dispositivo:</b> <b><a href="{% url 'my_client' client_id=client.uuid %}">{{ client.name }}</a></b></br>
+      <b>UUID:</b> {{client.uuid}}</br>
+
+      <b style="padding-left: 1em;"> Sensori:</b> </br>
+      {% for sensor in client.sensor_set.all %}
+      <b style="padding-left: 1.5em;">nome</b> <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a>, <b>UUID</b>: {{ sensor.uuid}}
+
+      </br>
+
+      {% endfor %} {%endfor%}
+
+      </br>
+
+
+</div>
+{% endblock content %}

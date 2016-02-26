@@ -1,0 +1,70 @@
+body {
+  max-width: 1400px;
+  margin-top:10px;
+  margin-left: 20px;
+}
+
+svg {
+  margin-top: -20px;
+  margin-left: 200px;
+  display: inline;
+  font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+path {
+  fill: none;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis--y path {
+  display: none;
+}
+
+.city--hover {
+  stroke: #000;
+}
+
+.focus text {
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+.voronoi path {
+  fill: none;
+  pointer-events: all;
+}
+
+#form {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+}
+
+.navigator .viewport {
+    stroke: grey;
+    fill: black;
+    fill-opacity: 0.2;
+}
+
+#checkboxes{
+    width: 200px;
+    font-family: sans-serif;
+    top: 50px;
+}
+
+h1{
+    position: center;
+    font-family: sans-serif;
+}
+
+.grid .tick {
+    stroke: black;
+    stroke-opacity: 0.1;
+    shape-rendering: crispEdges;
+}

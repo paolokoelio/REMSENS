@@ -1,0 +1,31 @@
+{% extends 'remsens/base.html' %}
+
+{% block content %}
+
+
+
+        <!-- {% if user.is_authenticated %}
+
+        <h3 class="page-header">Benvenuto {{ user.username }}!</h3>
+        <a href="/remsens/client_list/">My Org</a><br />
+        <br/><a href="/remsens">Lista Tutte Aziende</a><br />
+        {% else %} -->
+
+        <h3 class="page-header">Login to REMSENS</h3>
+
+               <form id="login_form" method="post" action="/remsens/login/">
+                   {% csrf_token %}
+                   Username: <input type="text" name="username" value="" size="50" />
+                   <br/><br/>
+                   Password: <input type="password" name="password" value="" size="50" />
+                   <br/><br/>
+
+                   <input type="submit" value="Login" />
+               </form>
+
+        <!-- {% endif %} -->
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,159 @@
+{% extends 'remsens/base.html' %} {% block content %} {% comment "Template functioning" %} This template checks two variables in views.py in method add_client_org: err: error creating new client succ: success creating new client then renders the page
+as for if-else logic {% endcomment %}
+
+
+
+<h3 class="page-header"><b>{{ user }}</b>, you're adding a new sensor for <b>{{client.name}}</b>:</h3>
+</br>
+</br>
+
+<form id="form" method="post" action="/remsens/{{client.uuid}}/add_sensor">
+
+  {% csrf_token %} {{ form.uuid.errors }} {{form.uuid.help_text}}
+  </br>
+  {{form.uuid}}</br>
+  </br>
+
+  {{ form.command.errors }} {{form.command.help_text}}
+  </br>
+  {{form.command}}</br>
+  </br>
+
+  {{ form.description.errors }} {{form.description.help_text}}
+  </br>
+  {{form.description}}</br>
+  </br>
+
+  {{ form.protocol_name.errors }} {{form.protocol_name.help_text}}
+  </br>
+  {{form.protocol_name}}</br>
+  </br>
+
+  {{ form.protocol_min.errors }} {{form.protocol_min.help_text}}
+  </br>
+  {{form.protocol_min}}</br>
+  </br>
+
+  {{ form.protocol_max.errors }} {{form.protocol_max.help_text}}
+  </br>
+  {{form.protocol_max}}</br>
+  </br>
+
+  {{ form.meas_unit.errors }} {{form.meas_unit.help_text}}
+  </br>
+  {{form.meas_unit}}</br>
+  </br>
+
+  {{ form.sampling_type.errors }} {{form.sampling_type.help_text}}
+  </br>
+  {{form.sampling_type}}</br>
+
+  {% comment "Graphic helper" %} To be hidden on load {% endcomment %}
+
+  <div id="period_div" style="padding-left: 1.5em;">{{ form.period.errors }}</br>
+    {{form.period.help_text}}</br>
+    {{form.period}}</br>
+
+    {{ form.period_unit.errors }}</br>
+    {{form.period_unit.help_text}}</br>
+    {{form.period_unit}}</div>
+
+  <div id="delta_div" style="padding-left: 1.5em;">
+    {{ form.delta.errors }}</br>
+    {{form.delta.help_text}}</br>
+    {{form.delta}} </br>{{ form.delta_type.errors }}</br>
+    {{form.delta_type.help_text}}</br>
+    {{form.delta_type}} {{ form.delta_min.errors }}</br>
+    {{form.delta_min.help_text}}</br>
+    {{form.delta_min}} {{ form.delta_max.errors }}</br>
+    {{form.delta_max.help_text}}</br>
+    {{form.delta_max}} {{ form.timeout.errors }}</br>
+    {{form.timeout.help_text}}</br>
+    {{form.timeout}} {{ form.timeout_unit.errors }}</br>
+    {{form.timeout_unit.help_text}}</br>
+    {{form.timeout_unit}}</div>
+
+  </br>{{ form.sending_type.errors }} {{form.sending_type.help_text}}
+  </br>
+  {{form.sending_type}}</br>
+
+  <div id="quota_div" style="padding-left: 1.5em;">
+    {{ form.quota.errors }}</br> {{form.quota.help_text}}
+    </br>
+    {{form.quota}}</br>
+
+    {{ form.quota_unit.errors }}</br> {{form.quota_unit.help_text}}
+    </br>
+    {{form.quota_unit}}</br>
+  </div>
+  </br>
+
+
+  <input type="submit" name="submit" value="Save Configuration" />
+</form>
+
+<script>
+  $(document).ready(function() {
+
+    $("#period_div").hide();
+    $("#delta_div").hide();
+    $("#quota_div").hide();
+
+    // On Select option changed
+    $("#id_sampling_type").change(function() {
+      // Check if current value is "PR" or "APR"
+      if ($(this).val() === "PERIODIC") {
+        // Show input field
+
+        $("#period_div").show();
+
+        $("#delta_div").hide();
+
+      } else if ($(this).val() === "APERIODIC") {
+        // Hide input field
+        $("#delta_div").show();
+
+        $("#period_div").hide();
+
+      } else {
+        //hide on default
+        $("#delta_div").hide();
+        $("#period_div").hide();
+      }
+    });
+
+
+    $("#id_sending_type").change(function() {
+      // Check if current value is "PR" or "APR"
+      if ($(this).val() === "INSTANT") {
+        // Show input field
+
+        $("#quota_div").hide();
+
+      } else if ($(this).val() === "BATCH") {
+        // Hide input field
+        $("#quota_div").show();
+
+      } else {
+        //hide on default
+        $("#quota_div").hide();
+      }
+    });
+
+
+  });
+</script>
+
+</br>
+</br>
+
+<div>
+  <b>{{tmp}}</b>
+
+</div>
+
+
+
+
+
+{% endblock content %}

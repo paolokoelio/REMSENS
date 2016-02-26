@@ -1,0 +1,137 @@
+Remote-sens platform specification
+====================================
+Tullio Facchinetti <tullio.facchinetti@unipv.it>
+v0.1, May 2015:
+First draft.
+
+== Characteristics of the platform
+
+* client-server architecture
+** the server hosts the website to allow the access to sensory data and configuration pages
+** the client represents the set of sensor nodes and intermediate components (data collectors, etc.)
+
+=== Communication methods
+
+* push-pull : to enable the sending of sensory data
+* publisher-subscriber : to allow the publisher (the server) to send configuratin information to subscribers (the clients)
+
+=== System components
+
+* the server (see above)
+** one or more Administrators may access the server for its management
+** one or more Users may access the server to create and manage a new Entity composed by MeteringPoints and Sensors
+* a Entity includes one or more MeteringPoints and Sensors
+* one or more MeteringPoints are logically connected (through the network) to the server or to other MeteringPoints (possible hierarchical structure)
+* one or more Sensors are physically connected to a MeteringPoint
+
+== Characteristics of software components
+
+* programming language: Python
+* web framework: https://www.djangoproject.com/[Django]
+* communication library: http://zguide.zeromq.org/[ZeroMQ] - used for every M2M (machine-to-machine comunication)
+* data format based on http://www.json.org/[JSON] (or, later, on http://msgpack.org/[msgpack] - a binary packed protocol)
+
+=== Required services
+
+==== Entity/MeteringPoints/Sensors registration
+
+* each components must be associated to a ID (UUID or other formats allowed)
+
+==== MeteringPoints/Sensors configuration (can happen at run-time)
+
+* *PERIODIC* (time-triggered) measurements
+* *APERIODIC* (event-triggered) measurements
+
+==== Measurements sending
+
+* *INSTANT* sending
+* *BATCH* sending
+
+=== Workflow
+
+TODO
+
+=== Data format
+
+The data format used to exchange all the required information is freely inspired to the http://amee.github.io/AMON/[AMON] data format.
+
+==== Device measurement configuration
+
+--------------------------------------
+{
+  "devices": [  								      				
+    {
+      "deviceId": required string UUID, /// sensore	
+      "meteringPointId": optional string UUID, // rasp
+	  "command": required string , // now supported "enable", disable", "cancel"
+      "configuration": {	optional (required for new sensor definition)
+				"description" : required string,  //general sensor description
+				"protocol" :{   required
+					"name": required string, // protocol name
+					"parameters": {  required  // variable format depends on the protocol name
+						"min" : 100,
+						"max" : 200
+					}
+				}
+			},
+      "privacy": optional string, either "private" or "public",  // not required??? default??
+      "location": { optional												
+        "name": optional string,
+        "latitude": optional latitude in degrees,
+        "longitude": optional longitude in degrees
+      },
+      "metadata": {
+        optional JSON object
+      }, 
+      "sampling": {
+        "type": required string, either "PERIODIC" or "APERIODIC"   // integer
+        "period": number, required for PERIODIC										
+        "period_unit": string, required for PERIODIC, either "sec" or "msec"			
+        "delta": number, required for APERIODIC											
+        "delta_type": string, required for APERIODIC, either "absolute" or "relative" 	
+		"min": number, optional for APERIODIC	// 										//ok
+		"max": number, optional for APERIODIC	//										//ok	
+        "timeout": number, optional for APERIODIC ///									//ok
+        "timeout_unit": string, optional for APERIODIC, either "sec" or "msec"			//ok
+      },
+
+      "sending": {
+        "type": required string, either "INSTANT" or "BATCH"							//OK
+		"quota": string, required in case of BATCH sending								//OK
+		"quota_unit": string, can be "Kb-Mb" or "samples"								//OK
+      }
+	  
+}
+--------------------------------------
+
+==== Measurements sending format
+
+--------------------------------------
+{
+  "devices": [
+    {
+      "deviceId": required string UUID, //sensore  											//OK
+      "meteringPointId": optional string UUID, // rasp  									//OK
+      "description": optional string,    													//OK
+      "privacy": required string, either "private" or "public",								//OK 
+      "location": {																			//OK
+        "name": optional string,															//OK
+        "latitude": optional latitude in degrees,											//OK
+        "longitude": optional longitude in degrees											//OK
+      },
+      "metadata": {																			//OK error
+        optional JSON object
+      },
+      "measurements": [																				
+        {						
+          "general_error": string, optional, indicate a general error affecting all the measurements //
+	  "values" : [																					//OK
+            "timestamp": required iso 8601															//OK 
+            "value": number, boolean or string, required unless "error" (below) is present,			//OK
+            "error": string, required unless "value" (above) is present,							//OK									
+			]
+        },
+      ]
+    }
+  ]
+}

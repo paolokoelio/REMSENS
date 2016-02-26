@@ -1,0 +1,69 @@
+{% extends 'remsens/base.html' %} {% load staticfiles %} {% block head %}
+
+<script type="text/javascript" src="{% static '/static/scripts/del_confirmation.js' %}"></script>
+
+{% endblock head %} {% block content %}
+
+
+<div>
+  <h3 class="page-header"><b>{{ user }}</b> sei membro di <b>{{ myorg }}</b></h3>
+
+  <div style="width: auto%;
+  float: left;">
+    +<a href="{% url 'add_client_org' %}">Add a Client</a> -
+    <a href="#" onclick="toggle();">Delete Client</a>
+  </div>
+  <div style="width: 82%;
+    float: right;">
+    <a href="{% url 'remove_client' client_id=client.uuid %}" id="del_link" style="display:none;">Confirm Deletion</a>
+  </div>
+  <br>
+
+  <h3><a href="{% url 'client_list' %}">{{ myorg }}</a></h3>
+  <p> <b>Tutti i membri dell'organizzazione:</b> {%for user in myorg.userprofile_set.all %} {{ user }} {% endfor %}</p>
+  <p>
+    <p>
+
+      <b>{{ client.name }} <a href="{% url 'add_sensor' client_id=client.uuid %}">+Add new Sensor</a></b>
+      <b><a href="{% url 'show_graph' client_id=client.uuid %}" target="_blank" >Show graph</a><b>
+          </br>
+            <b>UUID:</b> {{client.uuid}}</br>
+
+      <b style="padding-left: 1em;"> Sensori:</b> </br>
+      {% for sensor in client.sensor_set.all %}
+      <b style="padding-left: 1.5em;">nome</b> <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a>, <b>UUID</b>: {{ sensor.uuid}}
+      </br><b style="padding-left: 2.5em;">Misurazioni:</b>
+      <div style="padding-left: 2.5em;">
+        <div class="editable">
+          {% for measure in sensor.measurement_set.all %} {% if measure.value %}
+          <b>{{ measure.timestamp|date:" c " }}</b>: value <b>{{ measure.value}}</b>
+          </br>
+          {% else %}
+          <b>{{ measure.timestamp|date:" c " }}</b>: error <b> {{ measure.error}} </b>
+          </br>
+          {% endif %} {% endfor %}
+        </div>
+      </div>
+      </br>
+
+      <div>
+
+      </div>
+
+      {% endfor %}
+
+
+
+
+      </br>
+      </br>
+</div>
+
+
+
+
+
+
+
+
+{% endblock content %}

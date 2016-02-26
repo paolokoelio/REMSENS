@@ -1,0 +1,21 @@
+{% extends 'remsens/base.html' %}
+
+{% block content %}
+        <h1>Add an Organization</h1>
+
+        <form id="org_form" method="post" action="/remsens/add_org/">
+
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Create an Organization" />
+        </form>
+{% endblock content %}

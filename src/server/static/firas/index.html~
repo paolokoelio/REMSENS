@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>D3js Chart</title>
+        
+        <link rel="stylesheet" href="Library/base2.css">
+            
+            <script type = "text/javascript" src = "Library/d3.min.js"></script>
+            <script type = "text/javascript" src = "Library/jquery.min.js"></script>
+            
+
+        
+    </head>
+    
+    <body>
+        
+        <h1 align="center">Graphical Representation</h1>
+        <h3> Chose Your Sensors </h3>
+        
+        <div id ="checkboxes"> </div>
+        <div id ="chart"></div>
+
+
+        <script type = "text/javascript" src = "GlobalVariables.js"></script>
+
+        <script type = "text/javascript" src = "LoadData.js"></script>
+
+        <script type = "text/javascript" src = "DateAndValues.js"></script>
+        
+        <script type = "text/javascript" src = "CreateSensors.js"></script>
+
+        <script type = "text/javascript" src = "DrawLines.js"></script>
+
+        <script type = "text/javascript" src = "DesignChart.js"></script>
+        
+        <script type = "text/javascript" src = "DesignLowerChart.js"></script>
+        
+        <div class="second"></div>
+
+       
+    </body>
+    
+</html>

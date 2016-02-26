@@ -1,0 +1,36 @@
+{% extends 'remsens/base.html' %} {% load staticfiles %} {% block head %} {% endblock head %} {% block content %}
+
+
+<div>
+  <h3 class="page-header"><b>{{ user }}</b>, you have succesfully configured {{sensor.description}} for {{client.name}}:</h3>
+
+
+  <h4><a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{sensor.description}}</a>'s configuration:</h4>
+  <div style="padding-left: 1em; ">
+    <div style="width=10%;" class="editable">
+      {% for field, value in sensor.fields.iteritems %} {{ field }} : {{ value }}
+      <br> {% endfor %}
+    </div>
+  </div>
+
+
+  <h4><a href="{% url 'my_client' client_id=client.uuid %}">{{ client }}</a> now has:</h4>
+
+  <p style="padding-left: 1em;">
+    {%for sensor in client.sensor_set.all %}
+    <b>Sensor:</b>
+    <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a></b> <b>uuID:</b> {{sensor.uuid}}</br>
+
+
+    {%endfor%}
+  </p>
+</div>
+
+
+
+
+
+
+
+
+{% endblock content %}

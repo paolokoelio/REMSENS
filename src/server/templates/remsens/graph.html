@@ -1,0 +1,572 @@
+{% load staticfiles %}
+
+<html>
+
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/server.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sticky-footer-styles.css' %}">
+
+
+  <link rel="stylesheet" href="{% static '/static/firas/Library/base2.css' %}">
+  <script type="text/javascript" src="{% static '/static/firas/Library/d3.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/static/firas/Library/jquery.min.js' %}"></script>
+
+  <title>Remsens - Graph</title>
+</head>
+
+<body>
+
+  <div style="height: 10px;">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">REMSENS</a>
+        </div>
+        <div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="/remsens/logout/">Logout</a></li>
+            {% else %}
+            <li><a href="/remsens/register/">Register Here</a></li>
+            <li><a href="/remsens/login/">Login</a></li>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <!-- Start content -->
+
+  <div style="margin-left: 0px; padding-right: -115px;">
+
+  <br/>
+  <h3 style="margin-top: 25px; margin-left: 50%;" ><a href="{% url 'my_client' client_id=client.uuid %}">{{client.name}}</a></h3>
+
+
+  <div id="checkboxes"> </div>
+  <div id="chart"> </div>
+
+  <script type="text/javascript">
+    var loadedData = null,
+      sensorsColor = [],
+      allDiffDates = [], //contains the different dates
+      testFormat = d3.time.format("%Y-%m-%dT%H:%M:%S"),
+      parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S").parse, //shapes the date properly
+      parsedDiffDates = [],
+      formatTime = d3.time.format("%e %B"), //sets the time properly
+      margin = {
+        top: 50,
+        right: 75,
+        bottom: 50,
+        left: 50
+      },
+      width = 1100 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
+
+    var xMin,
+      xMax,
+      yMin = 0,
+      yMax = 0;
+
+    var tmp;
+
+    var myChart;
+    var x, y;
+
+    var h = 0; // color hue
+    var h2 = 0;
+
+    lines = false;
+  </script>
+
+  <script type="text/javascript">
+    d3.json("{% static '/static/firas/Library/data.json' %}", function(error, data) {
+
+
+
+      loadedData = data;
+
+
+
+      //---------------Control if file is correct---------------
+      if (data && data.sensors.length > 0) {
+
+      } else {
+        window.alert("ERROR! File is empty");
+      }
+
+      //---------------Create senors and colors---------------
+      CreateSensors();
+      //------------------------------------------------------------------------------------------
+
+      //---------------Set and parse dates, mins and max---------------
+      fixDates();
+      minANDmax();
+      //------------------------------------------------------------------------------------------
+
+      //---------------Create an array of objects to use with voronoi function---------------
+      datesoes = [];
+      arrayOfObjects = [];
+
+      for (var i = 0; i < data.sensors.length; i++) {
+        datesoes[i] = new Array();
+        sensori = {
+          name: loadedData.sensors[i].sensorName,
+          values: []
+        };
+        for (var j = 0; j < loadedData.sensors[i].collectedData.length; j++) {
+          datesoes[i].push(loadedData.sensors[i].collectedData[j].parsedDate);
+
+          sensori.values[j] = {
+            sensori: sensori,
+            date: datesoes[i][j],
+            value: (loadedData.sensors[i].collectedData[j].value),
+            mU: (loadedData.sensors[i].measurementUnit),
+            color: sensorsColor[i]
+          }
+        };
+        arrayOfObjects.push(sensori);
+      };
+      //------------------------------------------------------------------------------------------
+
+      //---------------Set behavior of checkboxes on change---------------
+      document.addEventListener("change", DrawLines, false);
+      //------------------------------------------------------------------------------------------
+
+      //---------------Design Charts---------------
+      DesignChart();
+      DesignLowerChart();
+      //------------------------------------------------------------------------------------------
+
+    });
+  </script>
+
+  <script type="text/javascript">
+    function fixDates() {
+
+      //---------------add parsed dates element to the sensors---------------
+      for (var i = 0; i < loadedData.sensors.length; ++i) {
+        for (var j = 0; j < loadedData.sensors[i].collectedData.length; j++) {
+          loadedData.sensors[i].collectedData[j].parsedDate = parseDate(loadedData.sensors[i].collectedData[j].date);
+        }
+      }
+      //------------------------------------------------------------------------------------------
+
+      //---------------create and array of the different dates and order it and sets min and max of x axis---------------
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        for (var j = 0; j < loadedData.sensors[i].collectedData.length; j++) {
+          if (allDiffDates.indexOf(loadedData.sensors[i].collectedData[j].date) == -1) {
+            allDiffDates.push(loadedData.sensors[i].collectedData[j].date);
+          }
+        }
+      }
+      allDiffDates = allDiffDates.sort();
+
+      for (var i = 0; i < allDiffDates.length; i++) {
+        parsedDiffDates.push(parseDate(allDiffDates[i]));
+      }
+
+      xMin = parsedDiffDates[0];
+      xMax = parsedDiffDates[parsedDiffDates.length - 1];
+    }
+    //------------------------------------------------------------------------------------------
+
+
+    function minANDmax() {
+      tmp = 0;
+      //---------------set min and max of y axis---------------
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        for (var j = 0; j < loadedData.sensors[i].collectedData.length; j++) {
+          if (loadedData.sensors[i].collectedData[j].value >= tmp) {
+            yMax = loadedData.sensors[i].collectedData[j].value;
+            tmp = yMax;
+          }
+        }
+      }
+
+      tmp = 0;
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        for (var j = 0; j < loadedData.sensors[i].collectedData.length; j++) {
+          if (loadedData.sensors[i].collectedData[j].value <= tmp) {
+            yMin = loadedData.sensors[i].collectedData[j].value;
+            tmp = yMin;
+          }
+        }
+      }
+    }
+    //------------------------------------------------------------------------------------------
+  </script>
+
+  <script type="text/javascript">
+    function CreateSensors() {
+
+      //---------------Generate a different color for each sensor---------------
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        sensorsColor.push(d3.hsl(h, .53, .53).toString());
+        h = h + 10;
+        if (h >= 350) {
+          h2 += 3;
+          h = h2;
+          if (h2 >= 350) {
+            h2 = 7;
+            h = h2
+          }
+        }
+      }
+      //------------------------------------------------------------------------------------------
+
+
+      //---------------Create a checkbox for each sensor---------------
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        var newCheckBox = document.createElement('input');
+        newCheckBox.setAttribute("class", "checkbox" + i);
+        newCheckBox.setAttribute("type", "checkbox");
+        newCheckBox.setAttribute("name", loadedData.sensors[i].sensorName);
+        newCheckBox.setAttribute("id", "sensor" + i);
+        //newCheckBox.addEventListener('click', DrawLines(i));
+
+        var label = document.createElement('label');
+        label.appendChild(document.createTextNode("Sensor " + loadedData.sensors[i].sensorName));
+        label.setAttribute("style", "color: " + sensorsColor[i]);
+
+        var newLine = document.createElement("br");
+
+        document.getElementById("checkboxes").appendChild(newCheckBox);
+        document.getElementById("checkboxes").appendChild(label);
+        document.getElementById("checkboxes").appendChild(newLine);
+      }
+    }
+
+    //------------------------------------------------------------------------------------------
+  </script>
+
+  <script type="text/javascript">
+    function Drawing(i) {
+
+      for (var k = 0; k < loadedData.sensors.length; k++) {
+        if ($('input.checkbox' + k).is(':checked')) {
+          lines = true;
+          break;
+        } else lines = false;
+      }
+
+      //---------------Assign data to respective path---------------
+      valueline = d3.svg.line()
+        .x(function(d) {
+          return x(d.parsedDate);
+        })
+        .y(function(d) {
+          return y(d.value);
+        })
+
+      //---------------Design the path---------------
+      plotArea.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(loadedData.sensors[i].collectedData))
+        .attr("id", "value" + i)
+        .style("stroke", sensorsColor[i]) // color of the line
+        .style("stroke-width", 1.2)
+        .style("stroke-linejoin", "round");
+
+    }
+
+    function DrawVoronoi() {
+      d3.select("#chart").selectAll(".voronoi").remove();
+      validMappingSensors = [];
+
+      //Add checked sensors to design voronoi map
+      for (var i = 0; i < loadedData.sensors.length; i++) {
+        if ($('input.checkbox' + i).is(':checked')) {
+          validMappingSensors.push(arrayOfObjects[i]);
+        }
+      }
+
+      //---------------Assign data to respective path---------------
+      voronoi = d3.geom.voronoi()
+        .x(function(d) {
+          return x(d.date);
+        })
+        .y(function(d) {
+          return y(d.value);
+        })
+        /*.clipExtent([
+        	[-margin.left, -margin.top],
+        	[width + margin.right, height + margin.bottom]
+        ])*/
+      ;
+
+
+      voronoiGroup = plotArea.append("g")
+        .attr("class", "voronoi");
+
+
+      voronoiGroup.selectAll("path")
+        .data(voronoi(d3.nest()
+          .key(function(d) {
+            return x(d.date) + "," + y(d.value);
+          })
+          .rollup(function(v) {
+            return v[0];
+          })
+          .entries(d3.merge(validMappingSensors.map(function(d) {
+            return d.values;
+          })))
+          .map(function(d) {
+            return d.values;
+          })))
+        .enter().append("path")
+        .attr("d", function(d) {
+          return "M" + d.join("L") + "Z";
+        })
+        .datum(function(d) {
+          return d.point;
+        })
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout);
+
+
+      function mouseover(d) {
+        //d3.select("#value" + i).classed("city--hover", true);
+        //d.sensori.valueline.parentNode.appendChild(d.sensori.valueline);
+        focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+        focus.select("text").text(d.sensori.name + "-" + d.value + "" + d.mU)
+          .attr("fill", d.color);
+        focus.select("circle").attr('fill', d.color);
+      }
+
+      function mouseout(d) {
+        d3.select("#value" + i).classed("city--hover", false);
+        focus.attr("transform", "translate(-100,-100)");
+      };
+
+    }
+
+    function DrawingLower(i) {
+      var i = +i;
+
+      navLine = d3.svg.line()
+        .x(function(d) {
+          return navXScale(d.parsedDate);
+        })
+        .y(function(d) {
+          return navYScale(d.value);
+        });
+
+      navChart.append('path')
+        .attr('d', navLine(loadedData.sensors[i].collectedData))
+        .attr("id", "lower" + i)
+        .style("stroke", sensorsColor[i]);
+    }
+
+
+
+    function DrawLines(e) {
+      if (e.target.type == "checkbox") {
+        var i = e.target.id.substring(6);
+        if (e.target.checked) {
+          Drawing(i);
+          DrawingLower(i);
+        } else {
+          d3.select("#chart").selectAll("#value" + i).remove();
+          d3.select("#chart").selectAll("#lower" + i).remove();
+        }
+        DrawVoronoi();
+      }
+    }
+  </script>
+
+  <script type="text/javascript">
+    function DesignChart() {
+      $("svg").css({
+        top: 78,
+        position: 'absolute'
+      });
+
+      x = d3.time.scale()
+        .range([0, width])
+        .domain([xMin, xMax]);
+      y = d3.scale.linear()
+        .range([height, 0])
+        .domain([yMin, yMax]).nice();
+
+
+      yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickValues([yMin, yMin + (yMax - yMin) / 5, yMin + 2 * (yMax - yMin) / 5, yMin + 3 * (yMax - yMin) / 5, yMin + 4 * (yMax - yMin) / 5, yMax]);
+
+      xAxis = d3.svg.axis()
+        .scale(x)
+        .ticks(5)
+        .tickFormat(d3.time.format("%m-%Y"));
+
+
+      myChart = d3.select('#chart').classed('chart', true).append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      plotArea = myChart.append('g')
+        .attr('clip-path', 'url(#plotAreaClip)');
+
+      plotArea.append('clipPath')
+        .attr('id', 'plotAreaClip')
+        .append('rect')
+        .attr({
+          width: width,
+          height: height
+        });
+
+
+      $("#chart").css({
+        top: 80,
+        left: 70,
+        position: 'absolute'
+      });
+
+      //Adding Grid lines
+      function make_y_axis() {
+        return d3.svg.axis()
+          .scale(y)
+          .orient("left")
+          .tickValues([yMin, yMin + (yMax - yMin) / 5, yMin + 2 * (yMax - yMin) / 5, yMin + 3 * (yMax - yMin) / 5, yMin + 4 * (yMax - yMin) / 5, yMax]);
+      };
+      //Draw the lines
+      myChart.append("g")
+        .attr("class", "grid")
+        .call(make_y_axis()
+          .tickSize(-width, 0, 0)
+          .tickFormat("")
+        );
+
+      myChart.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+      myChart.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+
+      myChart.append("text") // text label for the x axis
+        .attr("transform",
+          "translate(" + (width + margin.right * 1 / 3) + " ," +
+          (height) + ")")
+        .style("text-anchor", "middle")
+        .text("Data");
+
+      myChart.append("text")
+        .attr("transform", "rotate(-90)") //rotates the axes
+        .attr("y", -margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Valore");
+
+      focus = myChart.append("g")
+        .attr("transform", "translate(-100,-100)")
+        .attr("class", "focus");
+
+
+      focus.append("circle")
+        .attr("r", 3.5);
+
+      focus.append("text")
+        .attr("y", -10);
+
+    }
+  </script>
+
+  <script type="text/javascript">
+    function DesignLowerChart() {
+
+
+      //---------------Design the lower chart SVG and borders---------------
+      navWidth = width;
+      navHeight = 180 - margin.top - margin.bottom;
+
+
+      navXScale = d3.time.scale()
+        .domain([xMin, xMax])
+        .range([0, navWidth]);
+      navYScale = d3.scale.linear()
+        .domain([yMin, yMax])
+        .range([navHeight, 0]);
+
+      navXAxis = d3.svg.axis()
+        .scale(navXScale)
+        .orient('bottom');
+
+      viewport = d3.svg.brush()
+        .x(navXScale)
+        .on("brush", function() {
+          x.domain(viewport.empty() ? navXScale.domain() : viewport.extent());
+          redrawChart();
+        });
+
+      navChart = d3.select("#chart").append('svg')
+        .classed('navigator', true)
+        .attr('width', navWidth + margin.left + margin.right)
+        .attr('height', navHeight + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      navChart.append("g")
+        .attr("class", "viewport")
+        .call(viewport)
+        .selectAll("rect")
+        .attr("height", navHeight);
+
+      navChart.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + navHeight + ')')
+        .call(navXAxis);
+
+      navChart.append("g")
+        .attr("class", "viewport")
+        .call(viewport)
+        .selectAll("rect")
+        .attr("height", navHeight);
+      //------------------------------------------------------------------------------------------
+
+      //---------------function to redraw chart when zoomed---------------
+      function redrawChart() {
+        if (lines) {
+          DrawVoronoi();
+          for (var i = 0; i < loadedData.sensors.length; i++) {
+            myChart.selectAll("#value" + i).attr("d", valueline(loadedData.sensors[i].collectedData));
+          }
+          //myChart.selectAll(".voronoi").attr("d", voronoi(validMappingSensors));
+        }
+        myChart.select('.x.axis').call(xAxis);
+      }
+      //------------------------------------------------------------------------------------------
+    }
+  </script>
+
+</div>
+
+
+  <!-- <footer class="footer">
+    <div class="container">
+      <p class="text-muted">CC</p>
+    </div>
+  </footer> -->
+
+</body>
+
+</html>

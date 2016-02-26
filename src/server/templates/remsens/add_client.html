@@ -1,0 +1,82 @@
+{% extends 'remsens/base.html' %} {% block content %}
+
+
+{% comment "Template functioning" %} This template checks two variables in views.py in method add_client_org:
+err: error creating new client
+succ: success creating new client then renders the page as for if-else logic
+{% endcomment %}
+
+{% if err %}
+
+<h3 class="page-header">Client with uuid: <b>{{uuid}}</b> already exists!</h3>
+</br>
+</br>
+
+<form id="choice_form" method="post" action="/remsens/add_client/">
+
+  {% csrf_token %} {% for hidden in form.hidden_fields %} {{ hidden }}</br>
+  {% endfor %} {% for field in choice_form.visible_fields %} {{ field.errors }} {{ field.help_text }}</br>
+  {{ field }}</br>
+  </br>
+  {% endfor %}
+
+  <input type="submit" name="submit" value="Create a Client" />
+</form>
+
+</br>
+</br>
+
+{% elif succ %}
+
+<div>
+  <h3 class="page-header"><b>{{ user }}</b>, you have succesfully added a new client to {{myorg}}:</h3>
+
+  Client's uuid: {{client.uuid}}</br>
+  Claient's name: {{client.name}}
+
+  <h3><a href="{% url 'client_list' %}">{{ myorg }}</a> now has:</h3>
+  </p>
+  <p>
+    <p>
+      {%for client in myorg.client_set.all %}
+      <b>Device:</b> <a href="{% url 'my_client' client_id=client.uuid %}">{{ client.name }}</a> <b>uuID:</b> {{client.uuid}}</br>
+
+      <b> with Sensors:</b> </br>
+      &nbsp;{% for sensor in client.sensor_set.all %}
+      <b>nome</b> <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a>, <b>UUID</b>: {{ sensor.uuid}}
+      </br>
+
+      <div>
+
+      </div>
+
+      {% endfor %}
+      </br>
+      {% endfor %} {% else %}
+
+      <h3 class="page-header"><b>{{ user }}</b>, you're registering a new client for {{ myorg }}:</h3>
+      </br>
+
+      <form id="choice_form" method="post" action="/remsens/add_client/">
+
+        {% csrf_token %} {% for hidden in form.hidden_fields %} {{ hidden }}</br>
+        {% endfor %} {% for field in choice_form.visible_fields %} {{ field.errors }} {{ field.help_text }}</br>
+        {{ field }}</br>
+        </br>
+        {% endfor %}
+
+        <input type="submit" name="submit" value="Create a Client" />
+      </form>
+
+      </br>
+      </br>
+
+      {% endif %}
+
+</div>
+
+
+
+
+
+{% endblock content %}

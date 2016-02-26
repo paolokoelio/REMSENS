@@ -1,0 +1,57 @@
+{% load staticfiles %}
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type = "text/javascript" src = "{% static '/static/firas/Library/jquery.min.js' %}"></script>
+    <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'css/server.css' %}">
+<link rel="stylesheet" href="{% static 'css/sticky-footer-styles.css' %}">
+
+{% block head %}
+{% endblock %}
+<title>Remsens - {% block title %} Remote Sensoring {% endblock %}</title>
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">REMSENS</a>
+        </div>
+        <div>
+          <ul class="nav navbar-nav">
+              <li class="active"><a href="/">Home</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="/remsens/logout/">Logout</a></li>
+            {% else %}
+                <li><a href="/remsens/register/">Register Here</a></li>
+                <li><a href="/remsens/login/">Login</a></li>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+          {% block content %}
+           {% endblock %}
+    </div>
+
+
+<footer class="footer">
+    <div class="container">
+      <p class="text-muted"><b><a href="http://creativecommons.org/licenses/by/3.0/it/legalcode" target="_blank">CC BY 3.0 IT</a></b></p>
+    </div>
+</footer>
+
+</body>
+</html>

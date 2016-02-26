@@ -1,6 +1,6 @@
 {% extends 'remsens/base.html' %} {% load staticfiles %} {% block head %}
 
-<script type="text/javascript" src="{% static '/static/scripts/del_confirmation.js' %}"></script>
+<script type="text/javascript" src="{% static '/server/static/scripts/del_confirmation.js' %}"></script>
 
 {% endblock head %} {% block content %}
 
@@ -25,38 +25,32 @@
     <p>
 
       <b>{{ client.name }} <a href="{% url 'add_sensor' client_id=client.uuid %}">+Add new Sensor</a></b>
-      <b><a href="{% url 'show_graph' client_id=client.uuid %}" target="_blank" >Show graph</a><b>
-          </br>
-            <b>UUID:</b> {{client.uuid}}</br>
+      <b><a href="{% url 'show_graph' client_id=client.uuid %}" target="_blank" >Show graph</a></b>
+          <br>
+            <b>UUID:</b> {{client.uuid}}<br>
 
-      <b style="padding-left: 1em;"> Sensori:</b> </br>
+      <b style="padding-left: 1em;"> Sensori:</b> <br>
       {% for sensor in client.sensor_set.all %}
       <b style="padding-left: 1.5em;">nome</b> <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a>, <b>UUID</b>: {{ sensor.uuid}}
-      </br><b style="padding-left: 2.5em;">Misurazioni:</b>
+      <br><b style="padding-left: 2.5em;">Misurazioni:</b>
       <div style="padding-left: 2.5em;">
         <div class="editable">
           {% for measure in sensor.measurement_set.all %} {% if measure.value %}
-          <b>{{ measure.timestamp|date:" c " }}</b>: value <b>{{ measure.value}}</b>
-          </br>
+          <b>{{ measure.timestamp|date:" c " }}</b>: value <b>{{ measure.value}}</b> {{ sensor.meas_unit }}
+          <br>
           {% else %}
           <b>{{ measure.timestamp|date:" c " }}</b>: error <b> {{ measure.error}} </b>
-          </br>
+          <br>
           {% endif %} {% endfor %}
         </div>
       </div>
-      </br>
-
-      <div>
-
-      </div>
+      <br>
 
       {% endfor %}
 
 
-
-
-      </br>
-      </br>
+      <br>
+      <br>
 </div>
 
 

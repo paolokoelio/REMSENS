@@ -4,94 +4,100 @@ as for if-else logic {% endcomment %}
 
 
 <h3 class="page-header"><b>{{ user }}</b>, you're adding a new sensor for <b>{{client.name}}</b>:</h3>
-</br>
-</br>
 
 <form id="form" method="post" action="/remsens/{{client.uuid}}/add_sensor">
+<div class="left_side">
 
-  {% csrf_token %} {{ form.uuid.errors }} {{form.uuid.help_text}}
-  </br>
-  {{form.uuid}}</br>
-  </br>
+    {% csrf_token %} {{ form.uuid.errors }} {{form.uuid.help_text}}
+    <br>
+    {{form.uuid}}<br>
+    <br>
 
-  {{ form.command.errors }} {{form.command.help_text}}
-  </br>
-  {{form.command}}</br>
-  </br>
+    {{ form.command.errors }} {{form.command.help_text}}
+    <br>
+    {{form.command}}<br>
+    <br>
 
-  {{ form.description.errors }} {{form.description.help_text}}
-  </br>
-  {{form.description}}</br>
-  </br>
+    {{ form.description.errors }} {{form.description.help_text}}
+    <br>
+    {{form.description}}<br>
+    <br>
 
-  {{ form.protocol_name.errors }} {{form.protocol_name.help_text}}
-  </br>
-  {{form.protocol_name}}</br>
-  </br>
+    {{ form.protocol_name.errors }} {{form.protocol_name.help_text}}
+    <br>
+    {{form.protocol_name}}<br>
+    <br>
 
-  {{ form.protocol_min.errors }} {{form.protocol_min.help_text}}
-  </br>
-  {{form.protocol_min}}</br>
-  </br>
+    {{ form.protocol_min.errors }} {{form.protocol_min.help_text}}
+    <br>
+    {{form.protocol_min}}<br>
+    <br>
 
-  {{ form.protocol_max.errors }} {{form.protocol_max.help_text}}
-  </br>
-  {{form.protocol_max}}</br>
-  </br>
+    {{ form.protocol_max.errors }} {{form.protocol_max.help_text}}
+    <br>
+    {{form.protocol_max}}<br>
+    <br>
+
+</div>
+<div class="right_side">
+
 
   {{ form.meas_unit.errors }} {{form.meas_unit.help_text}}
-  </br>
-  {{form.meas_unit}}</br>
-  </br>
+  <br>
+  {{form.meas_unit}}<br>
+  <br>
 
   {{ form.sampling_type.errors }} {{form.sampling_type.help_text}}
-  </br>
-  {{form.sampling_type}}</br>
+  <br>
+  {{form.sampling_type}}<br>
 
   {% comment "Graphic helper" %} To be hidden on load {% endcomment %}
 
-  <div id="period_div" style="padding-left: 1.5em;">{{ form.period.errors }}</br>
-    {{form.period.help_text}}</br>
-    {{form.period}}</br>
+  <div id="period_div" style="padding-left: 1.5em;">{{ form.period.errors }}<br>
+    {{form.period.help_text}}<br>
+    {{form.period}}<br>
 
-    {{ form.period_unit.errors }}</br>
-    {{form.period_unit.help_text}}</br>
+    {{ form.period_unit.errors }}<br>
+    {{form.period_unit.help_text}}<br>
     {{form.period_unit}}</div>
 
   <div id="delta_div" style="padding-left: 1.5em;">
-    {{ form.delta.errors }}</br>
-    {{form.delta.help_text}}</br>
-    {{form.delta}} </br>{{ form.delta_type.errors }}</br>
-    {{form.delta_type.help_text}}</br>
-    {{form.delta_type}} {{ form.delta_min.errors }}</br>
-    {{form.delta_min.help_text}}</br>
-    {{form.delta_min}} {{ form.delta_max.errors }}</br>
-    {{form.delta_max.help_text}}</br>
-    {{form.delta_max}} {{ form.timeout.errors }}</br>
-    {{form.timeout.help_text}}</br>
-    {{form.timeout}} {{ form.timeout_unit.errors }}</br>
-    {{form.timeout_unit.help_text}}</br>
+    {{ form.delta.errors }}<br>
+    {{form.delta.help_text}}<br>
+    {{form.delta}} <br>{{ form.delta_type.errors }}<br>
+    {{form.delta_type.help_text}}<br>
+    {{form.delta_type}} {{ form.delta_min.errors }}<br>
+    {{form.delta_min.help_text}}<br>
+    {{form.delta_min}} {{ form.delta_max.errors }}<br>
+    {{form.delta_max.help_text}}<br>
+    {{form.delta_max}} {{ form.timeout.errors }}<br>
+    {{form.timeout.help_text}}<br>
+    {{form.timeout}} {{ form.timeout_unit.errors }}<br>
+    {{form.timeout_unit.help_text}}<br>
     {{form.timeout_unit}}</div>
 
-  </br>{{ form.sending_type.errors }} {{form.sending_type.help_text}}
-  </br>
-  {{form.sending_type}}</br>
+  <br>{{ form.sending_type.errors }} {{form.sending_type.help_text}}
+  <br>
+  {{form.sending_type}}<br>
 
   <div id="quota_div" style="padding-left: 1.5em;">
-    {{ form.quota.errors }}</br> {{form.quota.help_text}}
-    </br>
-    {{form.quota}}</br>
+    {{ form.quota.errors }}<br> {{form.quota.help_text}}
+    <br>
+    {{form.quota}}<br>
 
-    {{ form.quota_unit.errors }}</br> {{form.quota_unit.help_text}}
-    </br>
-    {{form.quota_unit}}</br>
+    {{ form.quota_unit.errors }}<br> {{form.quota_unit.help_text}}
+    <br>
+    {{form.quota_unit}}<br>
+      
   </div>
-  </br>
+    
+  <br>
 
 
   <input type="submit" name="submit" value="Save Configuration" />
-</form>
-
+  
+</div>
+    </form>
 <script>
   $(document).ready(function() {
 
@@ -144,8 +150,8 @@ as for if-else logic {% endcomment %}
   });
 </script>
 
-</br>
-</br>
+<br>
+<br>
 
 <div>
   <b>{{tmp}}</b>

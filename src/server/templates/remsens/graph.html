@@ -1,5 +1,6 @@
 {% load staticfiles %}
 
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -17,9 +18,9 @@
   <link rel="stylesheet" href="{% static 'css/sticky-footer-styles.css' %}">
 
 
-  <link rel="stylesheet" href="{% static '/static/firas/Library/base2.css' %}">
-  <script type="text/javascript" src="{% static '/static/firas/Library/d3.min.js' %}"></script>
-  <script type="text/javascript" src="{% static '/static/firas/Library/jquery.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'firas/Library/base2.css' %}">
+  <script type="text/javascript" src="{% static 'firas/Library/d3.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'firas/Library/jquery.min.js' %}"></script>
 
   <title>Remsens - Graph</title>
 </head>
@@ -92,7 +93,7 @@
   </script>
 
   <script type="text/javascript">
-    d3.json("{% static '/static/firas/Library/data.json' %}", function(error, data) {
+    d3.json("{% static 'firas/Library/data.json' %}", function(error, data) {
 
 
 

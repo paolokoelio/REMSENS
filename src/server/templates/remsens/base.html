@@ -1,23 +1,24 @@
 {% load staticfiles %}
+<!DOCTYPE html>
 <html>
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type = "text/javascript" src = "{% static '/static/firas/Library/jquery.min.js' %}"></script>
+    <script type = "text/javascript" src = "{% static '/server/static/firas/Library/jquery.min.js' %}"></script>
     <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="RoboLab project for remote sensor data collection, management and visualization">
+    <meta name="author" content="Pavlo Burda">
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="{% static 'css/server.css' %}">
-<link rel="stylesheet" href="{% static 'css/sticky-footer-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/server.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sticky-footer-styles.css' %}">
 
-{% block head %}
-{% endblock %}
-<title>Remsens - {% block title %} Remote Sensoring {% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+    <title>Remsens - {% block title %} Remote Sensoring {% endblock %}</title>
 </head>
 <body>
 
@@ -49,7 +50,12 @@
 
 <footer class="footer">
     <div class="container">
-      <p class="text-muted"><b><a href="http://creativecommons.org/licenses/by/3.0/it/legalcode" target="_blank">CC BY 3.0 IT</a></b></p>
+      <p class="text-muted"><b><a href="http://creativecommons.org/licenses/by/3.0/it/legalcode" target="_blank">CC BY 3.0 IT</a></b>
+          &nbsp;
+    <a style="float:right;" href="http://www.w3.org/html/logo/" target="_blank">
+<img src="https://www.w3.org/html/logo/badge/html5-badge-h-css3-graphics-semantics.png" width="88" height="29" alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, and Semantics" title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, and Semantics">
+</a>
+    </p>
     </div>
 </footer>
 

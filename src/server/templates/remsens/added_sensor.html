@@ -19,7 +19,7 @@
   <p style="padding-left: 1em;">
     {%for sensor in client.sensor_set.all %}
     <b>Sensor:</b>
-    <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a></b> <b>uuID:</b> {{sensor.uuid}}</br>
+    <a href="{% url 'my_sensor' sensor_id=sensor.uuid %}">{{ sensor.description }}</a></b> <b>uuID:</b> {{sensor.uuid}}<br>
 
 
     {%endfor%}

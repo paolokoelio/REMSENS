@@ -9,7 +9,7 @@ attraverso un protocollo di alto livello basato su AMON.
 In particolare il server si occupa di ricevere i dati di più client, memorizzarli in un database, consentire il controllo e la loro visualizzazione, nonché la gestione delle varie configurazioni di campionamento e invio.
 C'è inoltre la possibilità di disabilitare i sensori da remoto.
 
-Per poter usare il sistema è necessario, allo stato attuale, installare Python 2.7 (o 3.0) insieme al framework di sviluppo web Django, che altro non è che un set di librerie Python. Non essendo stato ancora "deployato", l'app viene fornita come un archivio "export" di un progetto Eclipse (ambiente PyDev).
+Per poter usare il sistema è necessario, allo stato attuale, installare Python 2.7 (o 3.0) insieme al framework di sviluppo web Django, che altro non è che un set di librerie Python.
 
 Dopo di ché bisogna assicurarsi che siano presenti tutte le librerie suddette nello stesso PATH di Python, per questo può essere di aiuto usare virtualenv o fare link simbolici alla directory. Prestare attenzione anche alla scelta del PATH in PyDev. Una volta installato Django, configurato il PATH in PyDev e importato il progetto in Eclipse sempre con PyDev, si visualizzano dentro la directory src altre directory con nomi del tipo alpha, serv2 e server.
 Alpha è il nome del progetto generale, server è il nome (e la directory dei file) dell'applicazione interna di Django che è quella parte del server che costituisce la parte web del sistema.

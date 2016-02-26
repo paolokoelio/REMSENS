@@ -4,7 +4,7 @@ REMOTING SERVER - Remsens
 
 Licensed under CC BY 3.0 IT
 
-Remoting Server è un sistema general purpose di gestione, controllo e visualizzzione dati di sensori
+Remoting Server è un sistema general purpose di gestione, controllo e visualizzazione dati di sensori
 attraverso un protocollo di alto livello basato su AMON.
 In particolare il server si occupa di ricevere i dati di più client, memorizzarli in un database, consentire il controllo e la loro visualizzazione, nonché la gestione delle varie configurazioni di campionamento e invio.
 C'è inoltre la possibilità di disabilitare i sensori da remoto.

@@ -1,7 +1,7 @@
 {% extends 'remsens/base.html' %} {% load staticfiles %} {% block head %}
 
-<script type="text/javascript" src="{% static '/server/static/scripts/del_confirmation.js' %}"></script>
-<script type="text/javascript" src="{% static '/server/static/scripts/form_type_selector.js' %}"></script>
+<script type="text/javascript" src="{% static 'scripts/del_confirmation.js' %}"></script>
+<script type="text/javascript" src="{% static 'scripts/form_type_selector.js' %}"></script>
 
 
 
@@ -25,7 +25,7 @@
     <br>with UUID: <b>{{sensor.uuid}}</b> <br>
 
     <br><b>Misurazioni:</b>
-    
+
       <div class="editable_single">
         <form id="chek_form" method="post" action="/remsens/{{sensor.uuid}}/sensor">
           {% for measure in sensor.measurement_set.all %} {% csrf_token %} {% if measure.value %}
@@ -38,7 +38,7 @@
           <br>
           {% endif %} {% endfor %}
 
-    
+
       <br>
       <button style="position: relative;" type="submit" name="delete_pressed" value="Delete Selected" >Delete Selected</button>
 

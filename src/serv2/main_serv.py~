@@ -32,7 +32,7 @@ class Main(object):
         while self.server.thrd_Status:
             pass
             
-        print("Server Down - Exiting")
+        print("Server Down")
         sys.exit()
 
 if __name__ == '__main__':

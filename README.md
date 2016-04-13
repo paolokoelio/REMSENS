@@ -1,13 +1,37 @@
 # REMSENS
-
+Intro
 REMOTING SERVER - Remsens
-
-Licensed under CC BY 3.0 IT
 
 Remoting Server è un sistema general purpose di gestione, controllo e visualizzazione dati di sensori
 attraverso un protocollo di alto livello basato su AMON.
 In particolare il server si occupa di ricevere i dati di più client, memorizzarli in un database, consentire il controllo e la loro visualizzazione, nonché la gestione delle varie configurazioni di campionamento e invio.
 C'è inoltre la possibilità di disabilitare i sensori da remoto.
+
+************ HOWTO veloce ************
+
+pacchetti necessari:
+apt-get install python-setuptools python-dev python-pip libxslt1-dev libzmq-dev sqlite3 libsqlite3-dev libxml2-dev build-essential
+
+installiamo virtualenv
+pip install virtualenv
+
+creiamo un virtual environment:
+virtualenv ~/remsens/djanni
+
+facciamo partire virtualenv:
+source ~/remsens/djanni/bin/activate
+
+installiamo django e i bindings zmq (dal virtualenv):
+pip install django==1.8 pyzmq
+
+ora si possono avviare le app, entrambe da virtualenv in remsens:
+python manage.py runserver per il web server
+python serv2/main_serv.py
+
+se nmain_serv2.py non parte aggiorniamo il $PYTHONPATH:
+export PYTHONPATH="$PYTHONPATH:$HOME/remsens"
+
+*********** fine HOWTO veloce ************
 
 Per poter usare il sistema è necessario, allo stato attuale, installare Python 2.7 (o 3.0) insieme al framework di sviluppo web Django, che altro non è che un set di librerie Python.
 
@@ -17,11 +41,11 @@ Mentre serv2 è la directory del server ad-hoc per la comunicazione con i singol
 
 Per far partire tutta la baracca bisogna avviare il server django come da documentazione (via terminale con "python manage.py runserver" oppure da pydev in eclipse) e parte il server web, a cui possiamo accedere in locale sulla porta 8080 (è tutto presente e configurabile come da documentazione).
 Mentre per far partire il server responsabile della comunicazione vera e propria con i client e conseguentemente coi singoli device (sensori d'ora in poi), bisogna avviare lo script "main_serv.py".
-Adesso ci troviamo con due terminali in cui uno visualizza le richieste su http e l'altro visualizza i dati di comunicazione che mano a mano processa e vari avvisi in caso di eccezioni. 
+Adesso ci troviamo con due terminali in cui uno visualizza le richieste su http e l'altro visualizza i dati di comunicazione che mano a mano processa e vari avvisi in caso di eccezioni.
 
 Possiamo adesso accedere all'account amministratore admin:remsens via localhost:8080/admin e da lì controlliamo tutto il modello del database.
 
-Da questa interfaccia accessibile solo all'admin, possiamo creare una nuova entita (d'ora in poi Organizzazione) che 
+Da questa interfaccia accessibile solo all'admin, possiamo creare una nuova entita (d'ora in poi Organizzazione) che
 rappresenta l'ente generale che accomuna gli utenti e i loro client/sensori.
 Possiamo, dunque, generare nuovi utenti registrandoli attraverso l'interfaccia web (oppure tutto da admin) e assegnare la loro appartenenza ad una Organizzazione di quelle presenti.
 Il nuovo utente non è, però, ancora attivo e va abilitato dall'interfaccia admin (si vuole esser certi che appartenga a quella Organizzazione :) ). Una volta abilitato, l'utente visualizza tutti i Client associati all'Organizzazione dalla home page e i rispettivi Sensori. Naturalmente al primo avvio non ce ne sono ancora, quindi procediamo a crearne uno.
@@ -57,4 +81,5 @@ Thanks to Python and Guido van Rossum Benevolent Dictator For Life
 
 #####author#####
 
+CC BY 3.0 IT
 Pavlo Burda - www.koelio.net - 20/10/2015

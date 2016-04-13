@@ -12,7 +12,7 @@ C'è inoltre la possibilità di disabilitare i sensori da remoto.
 pacchetti necessari:
 apt-get install python-setuptools python-dev python-pip libxslt1-dev libzmq-dev sqlite3 libsqlite3-dev libxml2-dev build-essential
 
-installiamo virtualenv
+installiamo virtualenv:
 pip install virtualenv
 
 creiamo un virtual environment:
@@ -24,11 +24,11 @@ source ~/remsens/djanni/bin/activate
 installiamo django e i bindings zmq (dal virtualenv):
 pip install django==1.8 pyzmq
 
-ora si possono avviare le app, entrambe da virtualenv in remsens:
+ora si possono avviare le app, entrambe da virtualenv nelal directory remsens:
 python manage.py runserver per il web server
 python serv2/main_serv.py
 
-se nmain_serv2.py non parte aggiorniamo il $PYTHONPATH:
+se main_serv2.py non parte aggiorniamo il $PYTHONPATH:
 export PYTHONPATH="$PYTHONPATH:$HOME/remsens"
 
 *********** fine HOWTO veloce ************
